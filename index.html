@@ -3,615 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luminous Lunarpunk — Tactile Stained Mosaic Kintsugi Botanist Mythpunk</title>
+  <title>Luminous Lunarpunk</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: #0a0a0f;
-      color: #e8e4dc;
-      font-family: 'Cormorant Garamond', serif;
-      overflow-x: hidden;
-      cursor: crosshair;
-    }
-
-    /* LAYER SYSTEM */
-    .layer {
-      position: fixed; inset: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-    }
-
-    /* NEWSPAPER TEXTURE */
-    #newspaper-layer {
-      opacity: 0.08;
-      background-image: repeating-linear-gradient(
-        0deg, transparent, transparent 1.5px, rgba(200,190,170,0.15) 1.5px, rgba(200,190,170,0.15) 3px
-      ), repeating-linear-gradient(
-        90deg, transparent, transparent 12px, rgba(200,190,170,0.08) 12px, rgba(200,190,170,0.08) 13px
-      );
-      mix-blend-mode: overlay;
-      z-index: 1;
-    }
-
-    /* WATERCOLOR BLEED */
-    #watercolor-layer {
-      z-index: 2;
-      opacity: 0.35;
-      background:
-        radial-gradient(ellipse 60% 40% at 20% 30%, rgba(139,90,60,0.4) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 50% at 80% 70%, rgba(60,100,90,0.3) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 60% at 50% 50%, rgba(120,60,80,0.25) 0%, transparent 70%),
-        radial-gradient(ellipse 70% 30% at 70% 20%, rgba(80,60,100,0.2) 0%, transparent 70%);
-      filter: blur(60px);
-      animation: watercolorShift 20s ease-in-out infinite alternate;
-    }
-    @keyframes watercolorShift {
-      0% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.1) rotate(2deg); }
-      100% { transform: scale(1) rotate(-1deg); }
-    }
-
-    /* MOSAIC CANVAS */
-    #mosaic-canvas { z-index: 3; opacity: 0.55; }
-
-    /* BOTANICAL CANVAS */
-    #botanical-canvas { z-index: 4; }
-
-    /* KINTSUGI SVG */
-    #kintsugi-layer { z-index: 5; }
-
-    /* LUMINESCENT GLOW PARTICLES */
-    #glow-canvas { z-index: 6; opacity: 0.7; }
-
-    /* MAIN CONTENT */
-    #content { position: relative; z-index: 10; pointer-events: none; }
-    #content > * { pointer-events: auto; }
-
-    /* HERO */
-    .hero {
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem;
-      position: relative;
-    }
-    .hero-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(2.5rem, 8vw, 7rem);
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, #d4af37 0%, #f0e6d2 25%, #d4af37 50%, #8b7355 75%, #d4af37 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: goldShimmer 6s linear infinite;
-      filter: drop-shadow(0 0 30px rgba(212,175,55,0.3)) drop-shadow(0 0 60px rgba(212,175,55,0.1));
-    }
-    @keyframes goldShimmer {
-      0% { background-position: 0% center; }
-      100% { background-position: 200% center; }
-    }
-    .hero-subtitle {
-      font-size: clamp(1rem, 2.5vw, 1.5rem);
-      font-style: italic;
-      color: #a89f91;
-      margin-top: 1.5rem;
-      letter-spacing: 0.15em;
-      opacity: 0.85;
-    }
-    .hero-cta {
-      margin-top: 3rem;
-      padding: 1rem 2.5rem;
-      border: 1px solid rgba(212,175,55,0.4);
-      background: rgba(212,175,55,0.05);
-      color: #d4af37;
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      backdrop-filter: blur(4px);
-    }
-    .hero-cta:hover {
-      background: rgba(212,175,55,0.15);
-      box-shadow: 0 0 40px rgba(212,175,55,0.2), inset 0 0 20px rgba(212,175,55,0.05);
-      transform: translateY(-2px);
-    }
-
-    /* SECTIONS */
-    .section {
-      min-height: 100dvh;
-      padding: 6rem 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .section-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(1.8rem, 5vw, 3.5rem);
-      color: #d4af37;
-      margin-bottom: 2rem;
-      text-align: center;
-      text-shadow: 0 0 40px rgba(212,175,55,0.2);
-    }
-    .section-body {
-      max-width: 640px;
-      font-size: 1.15rem;
-      line-height: 1.8;
-      color: #b8b0a4;
-      text-align: center;
-    }
-
-    /* FRAGMENT GRID */
-    .fragment-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 1.5rem;
-      max-width: 900px;
-      width: 100%;
-      margin-top: 3rem;
-    }
-    .fragment {
-      aspect-ratio: 1;
-      border: 1px solid rgba(212,175,55,0.2);
-      background: rgba(10,10,15,0.6);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 2rem;
-      color: rgba(212,175,55,0.6);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-    }
-    .fragment::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(212,175,55,0.08) 50%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .fragment:hover::before { opacity: 1; }
-    .fragment:hover {
-      border-color: rgba(212,175,55,0.5);
-      box-shadow: 0 0 30px rgba(212,175,55,0.15);
-      transform: translateY(-4px) scale(1.02);
-    }
-    .fragment.assembled {
-      border-color: #d4af37;
-      background: rgba(212,175,55,0.08);
-      color: #d4af37;
-      box-shadow: 0 0 40px rgba(212,175,55,0.2);
-    }
-
-    /* KINTSUGI GLOW FILTER */
-    .kintsugi-glow {
-      filter: drop-shadow(0 0 6px rgba(212,175,55,0.6)) drop-shadow(0 0 12px rgba(212,175,55,0.3));
-    }
-
-    /* DATAMOSH GLITCH TEXT */
-    .glitch-text {
-      position: relative;
-      animation: glitchPulse 4s infinite;
-    }
-    @keyframes glitchPulse {
-      0%, 90%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
-      92% { clip-path: inset(20% 0 60% 0); transform: translate(-3px, 2px); }
-      94% { clip-path: inset(50% 0 10% 0); transform: translate(3px, -1px); }
-      96% { clip-path: inset(0 0 0 0); transform: translate(0); }
-    }
-
-    /* FOOTER */
-    .footer {
-      padding: 4rem 2rem;
-      text-align: center;
-      border-top: 1px solid rgba(212,175,55,0.15);
-      color: #6a6358;
-      font-size: 0.9rem;
-      letter-spacing: 0.1em;
-    }
-
-    /* SCROLLBAR */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0a0a0f; }
-    ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 0; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,0.5); }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:#0a0a0f;color:#e8e4dc;font-family:'Cormorant Garamond',serif;overflow-x:hidden;cursor:crosshair;}
+    .layer{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;}
+    #newspaper-layer{opacity:.08;background-image:repeating-linear-gradient(0deg,transparent,transparent 1.5px,rgba(200,190,170,.15) 1.5px,rgba(200,190,170,.15) 3px),repeating-linear-gradient(90deg,transparent,transparent 12px,rgba(200,190,170,.08) 12px,rgba(200,190,170,.08) 13px);mix-blend-mode:overlay;z-index:1;}
+    #watercolor-layer{z-index:2;opacity:.35;background:radial-gradient(ellipse 60% 40% at 20% 30%,rgba(139,90,60,.4) 0%,transparent 70%),radial-gradient(ellipse 50% 50% at 80% 70%,rgba(60,100,90,.3) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 50% 50%,rgba(120,60,80,.25) 0%,transparent 70%);filter:blur(60px);animation:watercolorShift 20s ease-in-out infinite alternate;}
+    @keyframes watercolorShift{0%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.1) rotate(2deg);}100%{transform:scale(1) rotate(-1deg);}}
+    #mosaic-canvas{z-index:3;opacity:.55;}
+    #botanical-canvas{z-index:4;}
+    #kintsugi-layer{z-index:5;}
+    #glow-canvas{z-index:6;opacity:.7;}
+    #content{position:relative;z-index:10;pointer-events:none;}
+    #content>*{pointer-events:auto;}
+    .hero{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;}
+    .hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(2.5rem,8vw,7rem);font-weight:900;line-height:1;letter-spacing:.05em;text-transform:uppercase;background:linear-gradient(135deg,#d4af37 0%,#f0e6d2 25%,#d4af37 50%,#8b7355 75%,#d4af37 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:goldShimmer 6s linear infinite;filter:drop-shadow(0 0 30px rgba(212,175,55,.3));}
+    @keyframes goldShimmer{0%{background-position:0% center;}100%{background-position:200% center;}}
+    .hero-subtitle{font-size:clamp(1rem,2.5vw,1.5rem);font-style:italic;color:#a89f91;margin-top:1.5rem;letter-spacing:.15em;opacity:.85;}
+    .hero-cta{margin-top:3rem;padding:1rem 2.5rem;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.05);color:#d4af37;font-family:'Cinzel Decorative',serif;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .4s ease;backdrop-filter:blur(4px);}
+    .hero-cta:hover{background:rgba(212,175,55,.15);box-shadow:0 0 40px rgba(212,175,55,.2);transform:translateY(-2px);}
+    .section{min-height:100dvh;padding:6rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+    .section-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,5vw,3.5rem);color:#d4af37;margin-bottom:2rem;text-align:center;text-shadow:0 0 40px rgba(212,175,55,.2);}
+    .section-body{max-width:640px;font-size:1.15rem;line-height:1.8;color:#b8b0a4;text-align:center;}
+    .fragment-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1.5rem;max-width:900px;width:100%;margin-top:3rem;}
+    .fragment{aspect-ratio:1;border:1px solid rgba(212,175,55,.2);background:rgba(10,10,15,.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-family:'Cinzel Decorative',serif;font-size:2rem;color:rgba(212,175,55,.6);position:relative;overflow:hidden;transition:all .6s cubic-bezier(.4,0,.2,1);cursor:pointer;}
+    .fragment:hover{border-color:rgba(212,175,55,.5);box-shadow:0 0 30px rgba(212,175,55,.15);transform:translateY(-4px) scale(1.02);}
+    .fragment.assembled{border-color:#d4af37;background:rgba(212,175,55,.08);color:#d4af37;box-shadow:0 0 40px rgba(212,175,55,.2);}
+    .glitch-text{position:relative;animation:glitchPulse 4s infinite;}
+    @keyframes glitchPulse{0%,90%,100%{clip-path:inset(0 0 0 0);transform:translate(0);}92%{clip-path:inset(20% 0 60% 0);transform:translate(-3px,2px);}94%{clip-path:inset(50% 0 10% 0);transform:translate(3px,-1px);}96%{clip-path:inset(0 0 0 0);transform:translate(0);}}
+    .footer{padding:4rem 2rem;text-align:center;border-top:1px solid rgba(212,175,55,.15);color:#6a6358;font-size:.9rem;letter-spacing:.1em;}
+    ::-webkit-scrollbar{width:8px;}::-webkit-scrollbar-track{background:#0a0a0f;}::-webkit-scrollbar-thumb{background:rgba(212,175,55,.3);}
   </style>
 </head>
 <body>
-
-  <!-- BACKGROUND LAYERS -->
   <div id="newspaper-layer" class="layer"></div>
   <div id="watercolor-layer" class="layer"></div>
   <canvas id="mosaic-canvas" class="layer"></canvas>
   <canvas id="botanical-canvas" class="layer"></canvas>
-  <svg id="kintsugi-layer" class="layer" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge>
-          <feMergeNode in="blur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-    </defs>
-  </svg>
+  <svg id="kintsugi-layer" class="layer" xmlns="http://www.w3.org/2000/svg"><defs><filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>
   <canvas id="glow-canvas" class="layer"></canvas>
-
-  <!-- CONTENT -->
   <div id="content">
-
     <section class="hero">
       <h1 class="hero-title glitch-text">Luminous<br>Lunarpunk</h1>
-      <p class="hero-subtitle">Defiant folklore reassembly through stained glass, kintsugi, and botanical myth</p>
+      <p class="hero-subtitle">Defiant folklore reassembly through stained glass, kintsugi &amp; botanical myth</p>
       <button class="hero-cta" onclick="reassemble()">Reassemble the Goddess</button>
     </section>
-
     <section class="section">
       <h2 class="section-title">The Fracture</h2>
-      <p class="section-body">
-        Primordial goddesses shattered into obsidian shards and stained-glass fragments.
-        Each piece carries the weight of forgotten myth — sliced newspaper clippings,
-        photo cutouts, and watercolor bleed painted directly over the collapse.
-      </p>
-      <div class="fragment-grid" id="fragment-grid">
-        <!-- Injected by JS -->
-      </div>
+      <p class="section-body">Primordial goddesses shattered into obsidian shards and stained-glass fragments. Each piece carries the weight of forgotten myth — sliced newspaper clippings, photo cutouts, and watercolor bleed painted directly over the collapse.</p>
+      <div class="fragment-grid" id="fragment-grid"></div>
     </section>
-
     <section class="section">
       <h2 class="section-title">Kintsugi Repair</h2>
-      <p class="section-body">
-        Golden veins flow through the cracks. Not to hide the breakage, but to illuminate it.
-        The repair becomes the most luminous part of the whole — glowing kintsugi
-        transforming fracture into sacred geometry.
-      </p>
+      <p class="section-body">Golden veins flow through the cracks. Not to hide the breakage, but to illuminate it. The repair becomes the most luminous part of the whole — glowing kintsugi transforming fracture into sacred geometry.</p>
     </section>
-
     <section class="section">
       <h2 class="section-title">Botanical Overgrowth</h2>
-      <p class="section-body">
-        Lush regenerative vines reclaim the repaired surface. Moss, fern, and luminescent
-        fungi thread through mosaic gaps. The goddesses do not return to their original form —
-        they become something wilder, more tactile, more alive.
-      </p>
+      <p class="section-body">Lush regenerative vines reclaim the repaired surface. Moss, fern, and luminescent fungi thread through mosaic gaps. The goddesses do not return to their original form — they become something wilder, more tactile, more alive.</p>
     </section>
-
-    <footer class="footer">
-      <p>Tactile Stained Mosaic Kintsugi Botanist Mythpunk — 2026</p>
-    </footer>
-
+    <footer class="footer"><p>Tactile Stained Mosaic Kintsugi Botanist Mythpunk — 2026</p></footer>
   </div>
-
   <script type="module">
-    import gsap from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
-    gsap.registerPlugin(ScrollTrigger);
-
-    // ===== MOSAIC ENGINE =====
-    const mosaicCanvas = document.getElementById('mosaic-canvas');
-    const mosaicCtx = mosaicCanvas?.getContext('2d');
-    let mosaicW, mosaicH;
-    const mosaicTiles = [];
-    const mosaicColors = [
-      '#1a0a2e', '#2d1b4e', '#0f2e2e', '#1e3a3a',
-      '#4a1c40', '#2e1a47', '#1a3a4a', '#3a1a1a',
-      '#0a2e1a', '#2e2a0a', '#1a1a3a', '#3a2a1a'
-    ];
-    const glassColors = [
-      'rgba(180,60,60,0.35)', 'rgba(60,120,120,0.35)',
-      'rgba(120,60,120,0.35)', 'rgba(60,90,120,0.35)',
-      'rgba(120,100,60,0.3)', 'rgba(60,120,80,0.3)'
-    ];
-
-    function initMosaic() {
-      if (!mosaicCanvas || !mosaicCtx) return;
-      mosaicW = mosaicCanvas.width = window.innerWidth;
-      mosaicH = mosaicCanvas.height = window.innerHeight;
-      mosaicTiles.length = 0;
-      const cols = Math.ceil(mosaicW / 40);
-      const rows = Math.ceil(mosaicH / 40);
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const x = c * 40 + (Math.random() - 0.5) * 6;
-          const y = r * 40 + (Math.random() - 0.5) * 6;
-          const w = 38 + (Math.random() - 0.5) * 8;
-          const h = 38 + (Math.random() - 0.5) * 8;
-          const color = Math.random() > 0.3
-            ? mosaicColors[Math.floor(Math.random() * mosaicColors.length)]
-            : glassColors[Math.floor(Math.random() * glassColors.length)];
-          mosaicTiles.push({ x, y, w, h, color, rotation: (Math.random() - 0.5) * 0.05 });
-        }
-      }
-    }
-    function renderMosaic() {
-      if (!mosaicCtx) return;
-      mosaicCtx.clearRect(0, 0, mosaicW, mosaicH);
-      mosaicTiles.forEach(tile => {
-        mosaicCtx.save();
-        mosaicCtx.translate(tile.x + tile.w/2, tile.y + tile.h/2);
-        mosaicCtx.rotate(tile.rotation);
-        mosaicCtx.fillStyle = tile.color;
-        mosaicCtx.fillRect(-tile.w/2, -tile.h/2, tile.w, tile.h);
-        // Leading (black lines between glass)
-        mosaicCtx.strokeStyle = 'rgba(0,0,0,0.6)';
-        mosaicCtx.lineWidth = 1.5;
-        mosaicCtx.strokeRect(-tile.w/2, -tile.h/2, tile.w, tile.h);
-        // Light reflection
-        mosaicCtx.fillStyle = 'rgba(255,255,255,0.04)';
-        mosaicCtx.fillRect(-tile.w/2, -tile.h/2, tile.w * 0.4, tile.h * 0.4);
-        mosaicCtx.restore();
-      });
-    }
-
-    // ===== BOTANICAL ENGINE =====
-    const botCanvas = document.getElementById('botanical-canvas');
-    const botCtx = botCanvas?.getContext('2d');
-    let botW, botH;
-    const vines = [];
-
-    function initBotanical() {
-      if (!botCanvas || !botCtx) return;
-      botW = botCanvas.width = window.innerWidth;
-      botH = botCanvas.height = window.innerHeight;
-    }
-    function growVine(x, y) {
-      const vine = {
-        x, y,
-        angle: -Math.PI / 2 + (Math.random() - 0.5),
-        length: 0,
-        maxLength: 60 + Math.random() * 120,
-        width: 2 + Math.random() * 2,
-        color: Math.random() > 0.5
-          ? `rgba(${60 + Math.random()*60}, ${120 + Math.random()*80}, ${60 + Math.random()*40}, 0.6)`
-          : `rgba(${80 + Math.random()*40}, ${100 + Math.random()*60}, ${80 + Math.random()*40}, 0.5)`,
-        branches: [],
-        speed: 1 + Math.random() * 1.5
-      };
-      vines.push(vine);
-      if (vines.length > 80) vines.splice(0, vines.length - 80);
-    }
-    function updateBotanical() {
-      if (!botCtx) return;
-      botCtx.clearRect(0, 0, botW, botH);
-      vines.forEach((vine, vi) => {
-        if (vine.length >= vine.maxLength) {
-          // Draw leaves at tip
-          botCtx.save();
-          botCtx.translate(vine.x + Math.cos(vine.angle) * vine.length, vine.y + Math.sin(vine.angle) * vine.length);
-          botCtx.fillStyle = vine.color;
-          botCtx.beginPath();
-          botCtx.ellipse(0, 0, 4 + Math.random()*3, 2 + Math.random()*2, vine.angle + 0.5, 0, Math.PI*2);
-          botCtx.fill();
-          botCtx.restore();
-          return;
-        }
-        vine.length += vine.speed;
-        vine.angle += (Math.random() - 0.5) * 0.15;
-        const nx = vine.x + Math.cos(vine.angle) * vine.length;
-        const ny = vine.y + Math.sin(vine.angle) * vine.length;
-        botCtx.beginPath();
-        botCtx.moveTo(vine.x, vine.y);
-        botCtx.lineTo(nx, ny);
-        botCtx.strokeStyle = vine.color;
-        botCtx.lineWidth = vine.width * (1 - vine.length / vine.maxLength);
-        botCtx.stroke();
-        // Branch occasionally
-        if (Math.random() > 0.97 && vine.branches.length < 2) {
-          vine.branches.push({
-            x: nx, y: ny,
-            angle: vine.angle + (Math.random() - 0.5) * 1.2,
-            length: 0, maxLength: vine.maxLength * 0.5,
-            width: vine.width * 0.6, color: vine.color
-          });
-        }
-        // Draw branches
-        vine.branches.forEach(b => {
-          if (b.length < b.maxLength) {
-            b.length += vine.speed * 0.7;
-            b.angle += (Math.random() - 0.5) * 0.2;
-            const bx = b.x + Math.cos(b.angle) * b.length;
-            const by = b.y + Math.sin(b.angle) * b.length;
-            botCtx.beginPath();
-            botCtx.moveTo(b.x, b.y);
-            botCtx.lineTo(bx, by);
-            botCtx.strokeStyle = b.color;
-            botCtx.lineWidth = b.width;
-            botCtx.stroke();
-          }
-        });
-      });
-    }
-
-    // ===== KINTSUGI CRACKS =====
-    const kintsugiSvg = document.getElementById('kintsugi-layer');
-    function drawKintsugi() {
-      if (!kintsugiSvg) return;
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      kintsugiSvg.innerHTML = `
-        <defs>
-          <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-      `;
-      // Generate organic crack paths
-      for (let i = 0; i < 12; i++) {
-        let px = Math.random() * w;
-        let py = Math.random() * h;
-        let d = `M ${px} ${py}`;
-        const segs = 4 + Math.floor(Math.random() * 6);
-        for (let s = 0; s < segs; s++) {
-          px += (Math.random() - 0.5) * 300;
-          py += (Math.random() - 0.5) * 300;
-          d += ` Q ${px + (Math.random()-0.5)*80} ${py + (Math.random()-0.5)*80} ${px} ${py}`;
-        }
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', d);
-        path.setAttribute('fill', 'none');
-        path.setAttribute('stroke', '#d4af37');
-        path.setAttribute('stroke-width', (1 + Math.random() * 2).toString());
-        path.setAttribute('stroke-opacity', (0.3 + Math.random() * 0.4).toString());
-        path.setAttribute('filter', 'url(#goldGlow)');
-        path.style.strokeDasharray = '1000';
-        path.style.strokeDashoffset = '1000';
-        kintsugiSvg.appendChild(path);
-        // Animate crack reveal
-        gsap.to(path.style, {
-          strokeDashoffset: 0,
-          duration: 3 + Math.random() * 4,
-          delay: Math.random() * 2,
-          ease: 'power2.out'
-        });
-      }
-    }
-
-    // ===== LUMINESCENT PARTICLES =====
-    const glowCanvas = document.getElementById('glow-canvas');
-    const glowCtx = glowCanvas?.getContext('2d');
-    let glowW, glowH;
-    const particles = [];
-
-    function initGlow() {
-      if (!glowCanvas || !glowCtx) return;
-      glowW = glowCanvas.width = window.innerWidth;
-      glowH = glowCanvas.height = window.innerHeight;
-      particles.length = 0;
-      for (let i = 0; i < 60; i++) {
-        particles.push({
-          x: Math.random() * glowW,
-          y: Math.random() * glowH,
-          r: 1 + Math.random() * 3,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          alpha: 0.1 + Math.random() * 0.4,
-          color: Math.random() > 0.5 ? '#d4af37' : '#6a9e8a'
-        });
-      }
-    }
-    function renderGlow() {
-      if (!glowCtx) return;
-      glowCtx.clearRect(0, 0, glowW, glowH);
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = glowW;
-        if (p.x > glowW) p.x = 0;
-        if (p.y < 0) p.y = glowH;
-        if (p.y > glowH) p.y = 0;
-        glowCtx.save();
-        glowCtx.globalAlpha = p.alpha * (0.7 + Math.sin(Date.now() * 0.001 + p.x) * 0.3);
-        glowCtx.fillStyle = p.color;
-        glowCtx.shadowColor = p.color;
-        glowCtx.shadowBlur = 12;
-        glowCtx.beginPath();
-        glowCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        glowCtx.fill();
-        glowCtx.restore();
-      });
-    }
-
-    // ===== FRAGMENT GRID =====
-    const fragments = ['☥','⚶','⚹','✦','❋','⚘','✶','⚛','☽','☾','✧','❈'];
-    function renderFragments() {
-      const grid = document.getElementById('fragment-grid');
-      if (!grid) return;
-      grid.innerHTML = fragments.map((f, i) => `
-        <div class="fragment" id="frag-${i}" onclick="window.assembleFragment(${i})">${f}</div>
-      `).join('');
-      // Scatter them initially
-      gsap.set('.fragment', { y: 60, opacity: 0, rotation: (i) => (i % 2 === 0 ? -8 : 8) });
-      gsap.to('.fragment', {
-        y: 0, opacity: 1, rotation: 0,
-        duration: 1.2, stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: grid, start: 'top 80%' }
-      });
-    }
-    window.assembleFragment = (i) => {
-      const el = document.getElementById(`frag-${i}`);
-      if (!el) return;
-      el.classList.toggle('assembled');
-      playChime();
-    };
-    function reassemble() {
-      document.querySelectorAll('.fragment').forEach((el, i) => {
-        setTimeout(() => el.classList.add('assembled'), i * 100);
-      });
-      gsap.to(window, { scrollTo: { y: '#fragment-grid', offsetY: 100 }, duration: 1.5, ease: 'power2.inOut' });
-      playChime();
-    }
-    window.reassemble = reassemble;
-
-    // ===== AUDIO =====
+    // Mosaic
+    const mC=document.getElementById('mosaic-canvas'),mX=mC.getContext('2d');let mW,mH;const mTiles=[];
+    const mColors=['#1a0a2e','#2d1b4e','#0f2e2e','#1e3a3a','#4a1c40','#2e1a47','#1a3a4a','#3a1a1a'];
+    const gColors=['rgba(180,60,60,.35)','rgba(60,120,120,.35)','rgba(120,60,120,.35)','rgba(60,90,120,.35)'];
+    function initMosaic(){mW=mC.width=window.innerWidth;mH=mC.height=window.innerHeight;mTiles.length=0;const cols=Math.ceil(mW/40),rows=Math.ceil(mH/40);for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const x=c*40+(Math.random()-.5)*6,y=r*40+(Math.random()-.5)*6,w=38+(Math.random()-.5)*8,h=38+(Math.random()-.5)*8,color=Math.random()>.3?mColors[Math.floor(Math.random()*mColors.length)]:gColors[Math.floor(Math.random()*gColors.length)];mTiles.push({x,y,w,h,color,rotation:(Math.random()-.5)*.05});}}
+    function renderMosaic(){mX.clearRect(0,0,mW,mH);mTiles.forEach(t=>{mX.save();mX.translate(t.x+t.w/2,t.y+t.h/2);mX.rotate(t.rotation);mX.fillStyle=t.color;mX.fillRect(-t.w/2,-t.h/2,t.w,t.h);mX.strokeStyle='rgba(0,0,0,.6)';mX.lineWidth=1.5;mX.strokeRect(-t.w/2,-t.h/2,t.w,t.h);mX.fillStyle='rgba(255,255,255,.04)';mX.fillRect(-t.w/2,-t.h/2,t.w*.4,t.h*.4);mX.restore();});}
+    // Glow particles
+    const gC=document.getElementById('glow-canvas'),gX=gC.getContext('2d');let gW,gH;const parts=[];
+    function initGlow(){gW=gC.width=window.innerWidth;gH=gC.height=window.innerHeight;parts.length=0;for(let i=0;i<60;i++)parts.push({x:Math.random()*gW,y:Math.random()*gH,r:1+Math.random()*3,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,alpha:.1+Math.random()*.4,color:Math.random()>.5?'#d4af37':'#6a9e8a'});}
+    function renderGlow(){gX.clearRect(0,0,gW,gH);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=gW;if(p.x>gW)p.x=0;if(p.y<0)p.y=gH;if(p.y>gH)p.y=0;gX.save();gX.globalAlpha=p.alpha*(.7+Math.sin(Date.now()*.001+p.x)*.3);gX.fillStyle=p.color;gX.shadowColor=p.color;gX.shadowBlur=12;gX.beginPath();gX.arc(p.x,p.y,p.r,0,Math.PI*2);gX.fill();gX.restore();});}
+    // Kintsugi
+    const kSvg=document.getElementById('kintsugi-layer');
+    function drawKintsugi(){const w=window.innerWidth,h=window.innerHeight;kSvg.innerHTML='<defs><filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';for(let i=0;i<12;i++){let px=Math.random()*w,py=Math.random()*h,d=`M ${px} ${py}`;const segs=4+Math.floor(Math.random()*6);for(let s=0;s<segs;s++){px+=(Math.random()-.5)*300;py+=(Math.random()-.5)*300;d+=` Q ${px+(Math.random()-.5)*80} ${py+(Math.random()-.5)*80} ${px} ${py}`;}const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke','#d4af37');path.setAttribute('stroke-width',(1+Math.random()*2).toString());path.setAttribute('stroke-opacity',(.3+Math.random()*.4).toString());path.setAttribute('filter','url(#goldGlow)');path.style.strokeDasharray='1000';path.style.strokeDashoffset='1000';kSvg.appendChild(path);const start=Date.now();function animCrack(){const t=Math.min(1,(Date.now()-start)/(3000+Math.random()*4000));path.style.strokeDashoffset=(1000*(1-t)).toString();if(t<1)requestAnimationFrame(animCrack);}animCrack();}}
+    // Botanical
+    const bC=document.getElementById('botanical-canvas'),bX=bC.getContext('2d');let bW,bH;const vines=[];
+    function initBotanical(){bW=bC.width=window.innerWidth;bH=bC.height=window.innerHeight;}
+    function growVine(x,y){vines.push({x,y,angle:-Math.PI/2+(Math.random()-.5),length:0,maxLength:60+Math.random()*120,width:2+Math.random()*2,color:`rgba(${60+Math.random()*60},${120+Math.random()*80},${60+Math.random()*40},.6)`,speed:1+Math.random()*1.5,branches:[]});if(vines.length>80)vines.splice(0,vines.length-80);}
+    function updateBotanical(){bX.clearRect(0,0,bW,bH);vines.forEach(v=>{if(v.length>=v.maxLength)return;v.length+=v.speed;v.angle+=(Math.random()-.5)*.15;const nx=v.x+Math.cos(v.angle)*v.length,ny=v.y+Math.sin(v.angle)*v.length;bX.beginPath();bX.moveTo(v.x,v.y);bX.lineTo(nx,ny);bX.strokeStyle=v.color;bX.lineWidth=v.width*(1-v.length/v.maxLength);bX.stroke();});}
+    // Fragment grid
+    const frags=['☥','⚶','⚹','✦','❋','⚘','✶','⚛','☽','☾','✧','❈'];
+    function renderFragments(){const grid=document.getElementById('fragment-grid');grid.innerHTML=frags.map((f,i)=>`<div class="fragment" id="frag-${i}" onclick="window.assembleFragment(${i})">${f}</div>`).join('');}
+    window.assembleFragment=i=>{const el=document.getElementById(`frag-${i}`);if(el)el.classList.toggle('assembled');playChime();};
+    window.reassemble=()=>{document.querySelectorAll('.fragment').forEach((el,i)=>setTimeout(()=>el.classList.add('assembled'),i*100));playChime();};
+    // Audio
     let audioCtx;
-    function playChime() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(440 + Math.random() * 220, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.6);
-    }
-
-    // ===== INIT & LOOP =====
-    function resize() {
-      initMosaic();
-      initBotanical();
-      initGlow();
-      drawKintsugi();
-    }
-    window.addEventListener('resize', () => { clearTimeout(window._resizeDebounce); window._resizeDebounce = setTimeout(resize, 200); });
-    window.addEventListener('mousemove', (e) => { if (Math.random() > 0.85) growVine(e.clientX, e.clientY); });
-    window.addEventListener('click', (e) => { for (let i = 0; i < 3; i++) growVine(e.clientX, e.clientY); });
-
-    resize();
-    renderFragments();
-
-    function loop() {
-      renderMosaic();
-      updateBotanical();
-      renderGlow();
-      requestAnimationFrame(loop);
-    }
-    loop();
-
-    // ===== GSAP SCROLL ANIMATIONS =====
-    gsap.utils.toArray('.section-title').forEach(title => {
-      gsap.from(title, {
-        y: 40, opacity: 0, duration: 1,
-        scrollTrigger: { trigger: title, start: 'top 85%' }
-      });
-    });
-    gsap.utils.toArray('.section-body').forEach(body => {
-      gsap.from(body, {
-        y: 30, opacity: 0, duration: 1, delay: 0.2,
-        scrollTrigger: { trigger: body, start: 'top 85%' }
-      });
-    });
+    function playChime(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='sine';osc.frequency.setValueAtTime(440+Math.random()*220,audioCtx.currentTime);osc.frequency.exponentialRampToValueAtTime(880,audioCtx.currentTime+.3);gain.gain.setValueAtTime(.08,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.6);osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+.6);}
+    window.addEventListener('mousemove',e=>{if(Math.random()>.85)growVine(e.clientX,e.clientY);});
+    window.addEventListener('click',e=>{for(let i=0;i<3;i++)growVine(e.clientX,e.clientY);});
+    function resize(){initMosaic();initBotanical();initGlow();drawKintsugi();}window.addEventListener('resize',()=>{clearTimeout(window._rd);window._rd=setTimeout(resize,200);});
+    resize();renderFragments();
+    function loop(){renderMosaic();updateBotanical();renderGlow();requestAnimationFrame(loop);}loop();
   </script>
 </body>
 </html>
